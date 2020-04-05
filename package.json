@@ -1,0 +1,26 @@
+{
+    "name": "turnip-broker",
+    "version": "1.0.0",
+    "description": "Disord bot to track the prices of turnips accross islands",
+    "main": "index.ts",
+    "author": "Élise <elise.ph@icloud.com>",
+    "license": "MIT",
+    "scripts": {
+        "build": "tsc",
+        "start": "node --unhandled-rejections=strict dist/index.js",
+        "dev": "ts-node src/index.ts",
+        "test": "echo \"Error: no test specified yet.\" && exit 1"
+    },
+    "dependencies": {
+        "discord.js": "^12.0.2",
+        "moment": "^2.24.0",
+        "moment-timezone": "^0.5.28",
+        "mongoose": "^5.9.6"
+    },
+    "devDependencies": {
+        "@types/moment-timezone": "^0.5.13",
+        "@types/mongoose": "^5.7.7",
+        "@types/node": "^13.9.3",
+        "typescript": "^3.8.3"
+    }
+}
