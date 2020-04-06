@@ -16,9 +16,10 @@ client.login(process.env.DISCORD_BOT_TOKEN);
 import * as mongoose from "mongoose";
 
 mongoose
-    .connect(process.env.MONGO_URL || `mongodb://root:example@localhost/turnip`, {
+    .connect(process.env.MONGO_URL || `mongodb://root:example@localhost/turnip?authSource=admin`, {
         useNewUrlParser: true,
         useCreateIndex: true,
+        useUnifiedTopology: true,
     })
     .then(() => {
         console.log("mongo OK");
@@ -34,6 +35,7 @@ const cmds: commands.Command[] = [
     { match: ["sell"], argNb: 1, cb: commands.setSellingRate },
     { match: ["buy"], argNb: 1, cb: commands.setBuyingRate },
     { match: ["board"], argNb: 0, cb: commands.board },
+    { match: ["fullboard"], argNb: 0, cb: commands.fullboard },
     { match: [""], argNb: 0, cb: commands.helper },
     { match: ["aled"], argNb: 0, cb: commands.helper },
     { match: ["help"], argNb: 0, cb: commands.helper },

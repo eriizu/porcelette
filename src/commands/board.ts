@@ -6,6 +6,7 @@ import { cbWithUser } from "./cbWithUser";
 import * as assert from "assert";
 
 async function handler(
+    max: number = NaN,
     msg: discord.Message | discord.PartialMessage,
     _splitMsg: string[],
     user: users.DbUser
@@ -20,9 +21,7 @@ async function handler(
         return;
     }
 
-    let now = moment()
-        .tz(user.timezone)
-        .toDate();
+    let now = moment().tz(user.timezone).toDate();
     let ratesInEffect: rates.DbRate[];
     try {
         ratesInEffect = await rates.Db.find({
@@ -49,19 +48,26 @@ async function handler(
         let builder: string[] = [
             `Voici le cours du navet actuel (montré tel que pour le fuseau : ${user.timezone}) :`,
         ];
-        ratesInEffect.forEach((rate) => {
+        max = isNaN(max) || ratesInEffect.length < max ? ratesInEffect.length : 5;
+        let remains = max != ratesInEffect.length ? ratesInEffect.length - max : 0;
+
+        for (let i = 0; i < max; i++) {
+            let rate = ratesInEffect[i];
             let islander = rate.user as users.User;
-            let till = moment(rate.to)
-                .tz(user.timezone)
-                .locale("fr-fr");
+            let till = moment(rate.to).tz(user.timezone).locale("fr-fr");
             builder.push(
-                `- ${rate.price} clo. sur l'île de ${
+                `- ${rate.price} clo. chez ${
                     islander.name
                 } jusqu'à ${till.calendar().toLowerCase()}.`
             );
-        });
+        }
+        if (remains) {
+            builder.push(``);
+            builder.push(`(nombre d'entrées omises : ${remains})`);
+        }
         msg.channel.send(builder.join("\n"));
     }
 }
 
-export const board = cbWithUser.bind(null, handler);
+export const board = cbWithUser.bind(null, handler.bind(null, 5));
+export const fullboard = cbWithUser.bind(null, handler.bind(null, NaN));
