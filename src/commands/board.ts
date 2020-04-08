@@ -63,7 +63,9 @@ async function handler(
         }
         if (remains) {
             builder.push(``);
-            builder.push(`(nombre d'entrées omises : ${remains})`);
+            builder.push(
+                `Nombre d'entrées omises : ${remains} (faites \`navet!fullboard\` pour les voir).`
+            );
         }
         msg.channel.send(builder.join("\n"));
     }

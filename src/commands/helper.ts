@@ -33,6 +33,11 @@ export function helper(msg: discord.Message | discord.PartialMessage, _splitMsg:
             value:
                 "`navet!board`\nAffiche les prix rapportés par tout le monde, dans les magasin encore ouverts, du prix le plus haut au plus bas.",
         },
+        {
+            name: "Tableau du cours du navet (entier)",
+            value:
+                "`navet!fullboard`\nAffiche aussi les prix qui sont omis de la commande `!board`",
+        },
         { name: "\u200B", value: "\u200B" },
         {
             name: "Fuseaux horraires",
