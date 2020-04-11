@@ -5,6 +5,32 @@ import * as rates from "../rates";
 import { cbWithUser } from "./cbWithUser";
 import * as assert from "assert";
 
+async function generateBoard(
+    max: number,
+    msg: discord.Message | discord.PartialMessage,
+    ratesInEffect: rates.DbRate[],
+    user: users.DbUser,
+    builder: string[]
+) {
+    max = isNaN(max) || ratesInEffect.length < max ? ratesInEffect.length : 5;
+    let remains = max != ratesInEffect.length ? ratesInEffect.length - max : 0;
+
+    for (let i = 0; i < max; i++) {
+        let rate = ratesInEffect[i];
+        let islander = rate.user as users.User;
+        let till = moment(rate.to).tz(user.timezone).locale("fr-fr");
+        builder.push(
+            `- ${rate.price} clo. chez ${islander.name} jusqu'à ${till.calendar().toLowerCase()}.`
+        );
+    }
+    if (remains) {
+        builder.push(``);
+        builder.push(
+            `Nombre d'entrées omises : ${remains} (faites \`navet!fullboard\` pour les voir).`
+        );
+    }
+}
+
 async function handler(
     max: number = NaN,
     msg: discord.Message | discord.PartialMessage,
@@ -22,9 +48,10 @@ async function handler(
     }
 
     let now = moment().tz(user.timezone).toDate();
-    let ratesInEffect: rates.DbRate[];
+    let resellRates: rates.DbRate[];
+    let buyRates: rates.DbRate[];
     try {
-        ratesInEffect = await rates.Db.find({
+        let resellRatesProm = rates.Db.find({
             kind: rates.Kind.selling,
             guildId: msg.guild.id,
             from: { $lte: now },
@@ -33,42 +60,52 @@ async function handler(
             .sort({
                 price: -1,
             })
-            .populate("user", "name");
+            .populate("user", "name")
+            .exec();
+
+        let buyRatesProm = rates.Db.find({
+            kind: rates.Kind.buying,
+            guildId: msg.guild.id,
+            from: { $lte: now },
+            to: { $gte: now },
+        })
+            .sort({
+                price: -1,
+            })
+            .populate("user", "name")
+            .exec();
+
+        resellRates = await resellRatesProm;
+        buyRates = await buyRatesProm;
     } catch (err) {
         console.error("Rates retrival");
         console.error(err);
         msg.channel.send("Quelque chose m'empêche de regarder le cours du navet...");
         return;
     }
-    if (!ratesInEffect || !ratesInEffect.length) {
-        msg.channel.send(
-            "Il n'y a encore rien à afficher ici... Soit parce que tous les magasins sont clos, soit parce que personne n'a indiqué le prix du navet chez lui."
+
+    let builder: string[] = [
+        `Voici le cours du navet actuel (montré tel que pour le fuseau : ${user.timezone})...`,
+        ``,
+    ];
+
+    builder.push("Cours à la revente :");
+    if (!resellRates || !resellRates.length) {
+        builder.push(
+            "- Je n'ai rien à vous afficher car il n'y a peut être eu aucun signalement ou alors tous les magasins sont clos."
         );
     } else {
-        let builder: string[] = [
-            `Voici le cours du navet actuel (montré tel que pour le fuseau : ${user.timezone}) :`,
-        ];
-        max = isNaN(max) || ratesInEffect.length < max ? ratesInEffect.length : 5;
-        let remains = max != ratesInEffect.length ? ratesInEffect.length - max : 0;
-
-        for (let i = 0; i < max; i++) {
-            let rate = ratesInEffect[i];
-            let islander = rate.user as users.User;
-            let till = moment(rate.to).tz(user.timezone).locale("fr-fr");
-            builder.push(
-                `- ${rate.price} clo. chez ${
-                    islander.name
-                } jusqu'à ${till.calendar().toLowerCase()}.`
-            );
-        }
-        if (remains) {
-            builder.push(``);
-            builder.push(
-                `Nombre d'entrées omises : ${remains} (faites \`navet!fullboard\` pour les voir).`
-            );
-        }
-        msg.channel.send(builder.join("\n"));
+        generateBoard(max, msg, resellRates, user, builder);
     }
+
+    if (!buyRates || !buyRates.length) {
+        // builder.push("Je n'ai pas de.");
+    } else {
+        builder.push("");
+        builder.push("Cours à l'achat initial :");
+        generateBoard(max, msg, buyRates, user, builder);
+    }
+    msg.channel.send(builder.join("\n"));
 }
 
 export const board = cbWithUser.bind(null, handler.bind(null, 5));
