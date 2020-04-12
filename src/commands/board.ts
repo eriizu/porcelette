@@ -70,7 +70,7 @@ async function handler(
             to: { $gte: now },
         })
             .sort({
-                price: -1,
+                price: 1,
             })
             .populate("user", "name")
             .exec();
