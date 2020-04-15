@@ -1,3 +1,4 @@
+import { CommandModule } from "./newCmd";
 import * as discord from "discord.js";
 import * as moment from "moment-timezone";
 
@@ -35,3 +36,16 @@ export async function tzListCountry(
         }
     }
 }
+
+let cmdModules: CommandModule = {
+    commands: [
+        {
+            scope: ["getzones"],
+            argNb: 1,
+            handler: tzListCountry,
+            stopOnArgMissmatch: false,
+        },
+    ],
+};
+
+export default cmdModules;

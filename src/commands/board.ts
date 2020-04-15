@@ -1,3 +1,4 @@
+import { CommandModule } from "./newCmd";
 import * as discord from "discord.js";
 import * as moment from "moment-timezone";
 import * as users from "../users";
@@ -107,6 +108,25 @@ async function handler(
     }
     msg.channel.send(builder.join("\n"));
 }
+
+let cmdModule: CommandModule = {
+    commands: [
+        {
+            scope: ["board"],
+            argNb: 0,
+            handler: cbWithUser.bind(null, handler.bind(null, 5)),
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: ["fullboard"],
+            argNb: 0,
+            handler: cbWithUser.bind(null, handler.bind(null, NaN)),
+            stopOnArgMissmatch: false,
+        },
+    ],
+};
+
+export default cmdModule;
 
 export const board = cbWithUser.bind(null, handler.bind(null, 5));
 export const fullboard = cbWithUser.bind(null, handler.bind(null, NaN));
