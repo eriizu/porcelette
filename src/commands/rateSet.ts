@@ -4,7 +4,7 @@ import * as users from "../users";
 import * as rates from "../rates";
 import * as assert from "assert";
 import { cbWithUser } from "./cbWithUser";
-import { CommandModule } from "./newCmd";
+import { CommandModule } from "../commands";
 
 async function setRate(
     kind: rates.Kind,

@@ -1,5 +1,5 @@
 import * as discord from "discord.js";
-import { CommandModule } from "./newCmd";
+import { CommandModule } from "../commands";
 
 /**
  * Lists all timezones available with moment.js

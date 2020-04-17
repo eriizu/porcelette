@@ -1,4 +1,4 @@
-import * as newCmd from "./commands/newCmd";
+import * as Command from "./commands";
 import * as fs from "fs";
 
 export function loadCommands() {
@@ -6,13 +6,13 @@ export function loadCommands() {
         .readdirSync("./dist/commands")
         .filter((file) => file.endsWith(".js"));
 
-    let commands: newCmd.newCmd[] = [];
+    let commands: Command.Command[] = [];
     for (const filename of commandFileName) {
         const importedModule = require(`./commands/${filename}`);
 
         if (importedModule && importedModule.default) {
             let cmdMod = importedModule.default;
-            if (newCmd.isCommandModule(cmdMod)) {
+            if (Command.isCommandModule(cmdMod)) {
                 console.log("Loading module: " + cmdMod.name + ".");
                 commands.push(...cmdMod.commands);
             }

@@ -1,9 +1,3 @@
-import * as newCmd from "./commands/newCmd";
-import * as moment from "moment-timezone";
-import * as users from "./users";
-import * as rates from "./rates";
-import * as assert from "assert";
-
 import * as discord from "discord.js";
 
 const client = new discord.Client();
@@ -27,42 +21,11 @@ mongoose
     })
     .catch(console.error);
 
-// import * as commands from "./commands";
-
-// const cmds: commands.Command[] = [
-//     { match: ["getzones"], argNb: 1, cb: commands.tzListCountry },
-//     { match: ["getzones"], argNb: 0, cb: commands.tzHelper },
-//     { match: ["setzone"], argNb: 1, cb: commands.tzSet },
-//     { match: ["sell"], argNb: 1, cb: commands.setSellingRate },
-//     { match: ["buy"], argNb: 1, cb: commands.setBuyingRate },
-//     { match: ["board"], argNb: 0, cb: commands.board },
-//     { match: ["fullboard"], argNb: 0, cb: commands.fullboard },
-//     { match: [""], argNb: 0, cb: commands.helper },
-//     { match: ["aled"], argNb: 0, cb: commands.helper },
-//     { match: ["help"], argNb: 0, cb: commands.helper },
-//     // { match: ["sold"], argNb: 1, cb: () => {} },
-//     // { match: ["bought"], argNb: 1, cb: () => {} },
-//     // { match: [], argNb: 0, cb: () => {} },
-// ];
-
 import { loadCommands } from "./loadCommands";
 
 const ncmds = loadCommands();
 
-/**
- * Indicates a match between a command and the message inputed.
- */
-// function cmdPredicate(split: string[], cmd: commands.Command): boolean {
-//     if (split.length >= cmd.match.length + cmd.argNb) {
-//         let i = 0;
-//         for (let toMatch of cmd.match) {
-//             if (toMatch != split[i++]) return false;
-//         }
-//         return true;
-//     } else {
-//         return false;
-//     }
-// }
+import * as command from "./commands";
 
 client.on("message", (msg) => {
     let split = msg.content.split(" ");
@@ -73,7 +36,7 @@ client.on("message", (msg) => {
         split[0] = "";
     }
     for (let cmd of ncmds) {
-        if (newCmd.predicate(split, cmd)) {
+        if (command.predicate(split, cmd)) {
             let nbToShift = cmd.scope.length;
             while (nbToShift--) {
                 split.shift();
@@ -82,15 +45,4 @@ client.on("message", (msg) => {
             return;
         }
     }
-
-    // for (let cmd of cmds) {
-    //     if (cmdPredicate(split, cmd)) {
-    //         let nbToShift = cmd.match.length;
-    //         while (nbToShift--) {
-    //             split.shift();
-    //         }
-    //         cmd.cb(msg, split);
-    //         return;
-    //     }
-    // }
 });

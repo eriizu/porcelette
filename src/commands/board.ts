@@ -1,4 +1,4 @@
-import { CommandModule } from "./newCmd";
+import { CommandModule } from "../commands";
 import * as discord from "discord.js";
 import * as moment from "moment-timezone";
 import * as users from "../users";

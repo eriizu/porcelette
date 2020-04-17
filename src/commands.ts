@@ -2,10 +2,10 @@ import * as discord from "discord.js";
 
 export interface CommandModule {
     name: string;
-    commands: newCmd[];
+    commands: Command[];
 }
 
-export interface newCmd {
+export interface Command {
     scope: string[];
     argNb: number;
     stopOnArgMissmatch?: boolean;
@@ -16,7 +16,7 @@ export interface newCmd {
 /**
  * Indicates a match between a command and the message inputed.
  */
-export function predicate(split: string[], cmd: newCmd): boolean {
+export function predicate(split: string[], cmd: Command): boolean {
     if (split.length >= cmd.scope.length + cmd.argNb) {
         let i = 0;
         for (let toMatch of cmd.scope) {
@@ -28,7 +28,7 @@ export function predicate(split: string[], cmd: newCmd): boolean {
     }
 }
 
-export function isNewCmd(x: any): x is newCmd {
+export function isCommand(x: any): x is Command {
     return x.scope && x.argNb !== undefined && x.handler;
 }
 

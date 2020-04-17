@@ -2,7 +2,7 @@ import * as discord from "discord.js";
 import * as moment from "moment-timezone";
 import * as users from "../users";
 import { cbWithUser } from "./cbWithUser";
-import { CommandModule } from "./newCmd";
+import { CommandModule } from "../commands";
 /**
  * Let the user set their own timezone.
  */
