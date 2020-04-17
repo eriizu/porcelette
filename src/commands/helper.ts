@@ -51,9 +51,22 @@ export function helper(msg: discord.Message | discord.PartialMessage, _splitMsg:
 }
 
 let cmdModule: CommandModule = {
+    name: "helper",
     commands: [
         {
-            scope: ["helper"],
+            scope: ["help"],
+            argNb: 0,
+            handler: helper,
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: ["aled"],
+            argNb: 0,
+            handler: helper,
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: [""],
             argNb: 0,
             handler: helper,
             stopOnArgMissmatch: false,

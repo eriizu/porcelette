@@ -110,6 +110,7 @@ async function handler(
 }
 
 let cmdModule: CommandModule = {
+    name: "board",
     commands: [
         {
             scope: ["board"],

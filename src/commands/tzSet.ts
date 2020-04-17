@@ -37,6 +37,7 @@ async function handler(
 export const tzSet = cbWithUser.bind(null, handler);
 
 let cmdModules: CommandModule = {
+    name: "timezone set",
     commands: [
         {
             scope: ["setzone"],

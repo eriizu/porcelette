@@ -19,25 +19,20 @@ export function tzHelper(msg: discord.Message | discord.PartialMessage, splitMsg
 }
 
 let cmdModules: CommandModule = {
+    name: "timezone helper",
     commands: [
-        {
-            scope: ["help"],
-            argNb: 0,
-            handler: tzHelper,
-            stopOnArgMissmatch: false,
-        },
-        {
-            scope: ["aled"],
-            argNb: 0,
-            handler: tzHelper,
-            stopOnArgMissmatch: false,
-        },
-        {
-            scope: [""],
-            argNb: 0,
-            handler: tzHelper,
-            stopOnArgMissmatch: false,
-        },
+        // {
+        //     scope: ["getzones"],
+        //     argNb: 0,
+        //     handler: tzHelper,
+        //     stopOnArgMissmatch: false,
+        // },
+        // {
+        //     scope: [""],
+        //     argNb: 0,
+        //     handler: tzHelper,
+        //     stopOnArgMissmatch: false,
+        // },
     ],
 };
 

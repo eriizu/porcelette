@@ -1,4 +1,5 @@
 import * as discord from "discord.js";
+import { newCmd } from "./newCmd";
 
 export * from "./tzHelper";
 export * from "./tzListCountry";

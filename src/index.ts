@@ -1,3 +1,4 @@
+import * as newCmd from "./commands/newCmd";
 import * as moment from "moment-timezone";
 import * as users from "./users";
 import * as rates from "./rates";
@@ -8,7 +9,7 @@ import * as discord from "discord.js";
 const client = new discord.Client();
 
 client.on("ready", () => {
-    console.log("ready");
+    console.log("Discord OK");
     client.user.setPresence({ activity: { name: 'faites : "navet!aled"' } });
 });
 client.login(process.env.DISCORD_BOT_TOKEN);
@@ -22,42 +23,46 @@ mongoose
         useUnifiedTopology: true,
     })
     .then(() => {
-        console.log("mongo OK");
+        console.log("Mongo OK");
     })
     .catch(console.error);
 
-import * as commands from "./commands";
+// import * as commands from "./commands";
 
-const cmds: commands.Command[] = [
-    { match: ["getzones"], argNb: 1, cb: commands.tzListCountry },
-    { match: ["getzones"], argNb: 0, cb: commands.tzHelper },
-    { match: ["setzone"], argNb: 1, cb: commands.tzSet },
-    { match: ["sell"], argNb: 1, cb: commands.setSellingRate },
-    { match: ["buy"], argNb: 1, cb: commands.setBuyingRate },
-    { match: ["board"], argNb: 0, cb: commands.board },
-    { match: ["fullboard"], argNb: 0, cb: commands.fullboard },
-    { match: [""], argNb: 0, cb: commands.helper },
-    { match: ["aled"], argNb: 0, cb: commands.helper },
-    { match: ["help"], argNb: 0, cb: commands.helper },
-    // { match: ["sold"], argNb: 1, cb: () => {} },
-    // { match: ["bought"], argNb: 1, cb: () => {} },
-    // { match: [], argNb: 0, cb: () => {} },
-];
+// const cmds: commands.Command[] = [
+//     { match: ["getzones"], argNb: 1, cb: commands.tzListCountry },
+//     { match: ["getzones"], argNb: 0, cb: commands.tzHelper },
+//     { match: ["setzone"], argNb: 1, cb: commands.tzSet },
+//     { match: ["sell"], argNb: 1, cb: commands.setSellingRate },
+//     { match: ["buy"], argNb: 1, cb: commands.setBuyingRate },
+//     { match: ["board"], argNb: 0, cb: commands.board },
+//     { match: ["fullboard"], argNb: 0, cb: commands.fullboard },
+//     { match: [""], argNb: 0, cb: commands.helper },
+//     { match: ["aled"], argNb: 0, cb: commands.helper },
+//     { match: ["help"], argNb: 0, cb: commands.helper },
+//     // { match: ["sold"], argNb: 1, cb: () => {} },
+//     // { match: ["bought"], argNb: 1, cb: () => {} },
+//     // { match: [], argNb: 0, cb: () => {} },
+// ];
+
+import { loadCommands } from "./loadCommands";
+
+const ncmds = loadCommands();
 
 /**
  * Indicates a match between a command and the message inputed.
  */
-function cmdPredicate(split: string[], cmd: commands.Command): boolean {
-    if (split.length >= cmd.match.length + cmd.argNb) {
-        let i = 0;
-        for (let toMatch of cmd.match) {
-            if (toMatch != split[i++]) return false;
-        }
-        return true;
-    } else {
-        return false;
-    }
-}
+// function cmdPredicate(split: string[], cmd: commands.Command): boolean {
+//     if (split.length >= cmd.match.length + cmd.argNb) {
+//         let i = 0;
+//         for (let toMatch of cmd.match) {
+//             if (toMatch != split[i++]) return false;
+//         }
+//         return true;
+//     } else {
+//         return false;
+//     }
+// }
 
 client.on("message", (msg) => {
     let split = msg.content.split(" ");
@@ -67,14 +72,25 @@ client.on("message", (msg) => {
     } catch {
         split[0] = "";
     }
-    for (let cmd of cmds) {
-        if (cmdPredicate(split, cmd)) {
-            let nbToShift = cmd.match.length;
+    for (let cmd of ncmds) {
+        if (newCmd.predicate(split, cmd)) {
+            let nbToShift = cmd.scope.length;
             while (nbToShift--) {
                 split.shift();
             }
-            cmd.cb(msg, split);
+            cmd.handler(msg, split);
             return;
         }
     }
+
+    // for (let cmd of cmds) {
+    //     if (cmdPredicate(split, cmd)) {
+    //         let nbToShift = cmd.match.length;
+    //         while (nbToShift--) {
+    //             split.shift();
+    //         }
+    //         cmd.cb(msg, split);
+    //         return;
+    //     }
+    // }
 });

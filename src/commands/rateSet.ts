@@ -60,6 +60,7 @@ async function setRate(
 }
 
 let cmdModule: CommandModule = {
+    name: "rate",
     commands: [
         {
             scope: ["sell"],
