@@ -1,4 +1,5 @@
 import * as discord from "discord.js";
+import { CommandModule } from "../commands";
 
 /**
  * Lists all timezones available with moment.js
@@ -48,3 +49,29 @@ export function helper(msg: discord.Message | discord.PartialMessage, _splitMsg:
 
     msg.channel.send(message);
 }
+
+let cmdModule: CommandModule = {
+    name: "helper",
+    commands: [
+        {
+            scope: ["help"],
+            argNb: 0,
+            handler: helper,
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: ["aled"],
+            argNb: 0,
+            handler: helper,
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: [""],
+            argNb: 0,
+            handler: helper,
+            stopOnArgMissmatch: false,
+        },
+    ],
+};
+
+export default cmdModule;

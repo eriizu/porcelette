@@ -4,6 +4,7 @@ import * as users from "../users";
 import * as rates from "../rates";
 import * as assert from "assert";
 import { cbWithUser } from "./cbWithUser";
+import { CommandModule } from "../commands";
 
 async function setRate(
     kind: rates.Kind,
@@ -27,9 +28,7 @@ async function setRate(
         return;
     }
 
-    let now = moment()
-        .tz(user.timezone)
-        .toDate();
+    let now = moment().tz(user.timezone).toDate();
     let delRes = await rates.Db.deleteMany({
         user: user._id,
         guildId: msg.guild.id,
@@ -59,8 +58,26 @@ async function setRate(
         msg.channel.send(err.message);
     }
 }
-/**
- * Let the user report their buying rate
- */
+
+let cmdModule: CommandModule = {
+    name: "rate",
+    commands: [
+        {
+            scope: ["sell"],
+            argNb: 0,
+            handler: cbWithUser.bind(null, setRate.bind(null, rates.Kind.selling)),
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: ["buy"],
+            argNb: 0,
+            handler: cbWithUser.bind(null, setRate.bind(null, rates.Kind.buying)),
+            stopOnArgMissmatch: false,
+        },
+    ],
+};
+
+export default cmdModule;
+
 export const setSellingRate = cbWithUser.bind(null, setRate.bind(null, rates.Kind.selling));
 export const setBuyingRate = cbWithUser.bind(null, setRate.bind(null, rates.Kind.buying));

@@ -2,6 +2,7 @@ import * as discord from "discord.js";
 import * as moment from "moment-timezone";
 import * as users from "../users";
 import { cbWithUser } from "./cbWithUser";
+import { CommandModule } from "../commands";
 /**
  * Let the user set their own timezone.
  */
@@ -34,3 +35,17 @@ async function handler(
 }
 
 export const tzSet = cbWithUser.bind(null, handler);
+
+let cmdModules: CommandModule = {
+    name: "timezone set",
+    commands: [
+        {
+            scope: ["setzone"],
+            argNb: 1,
+            handler: cbWithUser.bind(null, handler),
+            stopOnArgMissmatch: false,
+        },
+    ],
+};
+
+export default cmdModules;

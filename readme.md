@@ -14,15 +14,20 @@ Knowing that, the bot can tell where the users shall sell their turnips and info
 All are subject to change.
 
 -   "navet!getzones" + an optional country code
-    -   returns the available timezones
--   "navet!setzone" + a timezone string as returned by get timezones
+    -   returns the available timezones for given country
+-   "navet!setzone" + a timezone string as returned by `getzones`
     -   is specific to the user using it
--   "navet!price" + a prince in bells
+-   "navet!sell" + a price in bells
+    -   price at which the user can sell their turnips
     -   is specific to the user and the server
--   "navet!rate" + a price in bells
+-   "navet!buy" + a price in bells
+    -   price at which the user can buy their turnips
     -   is specific to the user and the server
 -   "navet!board"
     -   is specific to the user and the server
     -   returns
         -   highest current price and the island's mayor name (including price ratio)
         -   highest recorded since user bought (including price ratio)
+    -   stops at five entries
+-   "navet!fullboard"
+    -   same behavior, except it doesn't stop at five
