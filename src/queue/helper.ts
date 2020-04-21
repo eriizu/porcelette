@@ -19,7 +19,7 @@ export async function handleHelper(
         `Pour accèder à l'île de quelqu'un, il suffit de mettre une réaction sur le message de file d'attente.`,
         ``,
         `Attention`,
-        `- Il n'est pas possible de d'attendre dans deux files en même temps, car aucun mécanisme n'est présent pour gerer les situations où votre tour arriverais en simultané dans deux files.`,
+        `- Il n'est pas possible d'attendre dans deux files en même temps, car aucun mécanisme n'est présent pour gerer les situations où votre tour arriverais en simultané dans deux files.`,
         `- Il est encore possible que vous tombiez sur des problèmes techniques ou des erreurs pas nécessairement explicites.`,
         ``,
         `Si vous remarquez un problème ou que je fais des fautes d'orthographe vous êtes encouragés à créer une *issue* ici : https://github.com/eriizu/porcelette/issues`,
