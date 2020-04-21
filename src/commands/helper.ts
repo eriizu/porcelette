@@ -4,7 +4,7 @@ import { CommandModule } from "../commands";
 /**
  * Lists all timezones available with moment.js
  */
-export function helper(msg: discord.Message | discord.PartialMessage, _splitMsg: string[]) {
+export async function helper(msg: discord.Message | discord.PartialMessage, _splitMsg: string[]) {
     let builder: string[] = [
         `Hi! I'm here to help your server keep track of everyone's turnip resell rates.`,
         `Here are the commands you can run.`,

@@ -9,25 +9,52 @@ export async function handleQueueJoin(reaction: discord.MessageReaction, user: d
     let userTag = user.tag;
     let queue: DbQueue;
     try {
-        queue = await Db.findOne({ messageId: reaction.message.id, state: State.running });
-        assert(queue);
+        queue = await Db.findOne({
+            messageId: reaction.message.id,
+            state: State.running,
+            "currentUser.id": { $not: { $eq: userId } },
+            "nextUsers.id": { $not: { $eq: userId } },
+        });
+        assert(queue, "No queue to join.");
+    } catch (err) {
+        console.error(err);
+        return;
+        // throw new ReplyError(
+        //     "Je n'ai pas été en mesure de trouver la file d'attente que vous avez tenté de rejoindre. Soit elle a été supprimée, soit elle n'est plus active.",
+        //     err
+        // );
+    }
+
+    // Would likely never occur.
+    try {
+        let res = await Db.countDocuments({
+            $or: [{ "currentUser.id": { $eq: userId } }, { "nextUsers.id": { $eq: userId } }],
+        });
+        assert(res === 0, "User already waiting in a queue.");
     } catch (err) {
         throw new ReplyError(
-            "Je n'ai pas été en mesure de trouver la file d'attente que vous avez tenté de rejoindre. Soit elle a été supprimée, soit elle n'est plus active.",
+            user.username +
+                ", il n'est pas encore possible de participer à plusieurs files d'attentes en même temps.",
             err
         );
     }
 
-    let creatorTag: string;
-    try {
-    } catch {}
+    if (!queue.currentUser.id) {
+        // TODO : send the message to the user
+        user.send(
+            `C'est déjà votre tour ! Le dodo code de ${queue.creator.tag} est \`${queue.dodocode}\`.\n` +
+                "Lorsque vous avez fini sur l'Île de votre hôte, envoyez moi `dokyu!done`, et je laisserai la personne suivante passer."
+        ).catch(console.error);
 
-    if (!queue.currentUser) {
-        //TODO : send the message to the user
         queue.currentUser = { tag: userTag, id: userId };
+        reaction.message
+            .edit(generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser))
+            .catch(console.error);
     } else {
         queue.nextUsers.push({ tag: user.tag, id: user.id });
-        reaction.message.edit(generateMessage(queue.creator.tag, queue.nextUsers));
+        reaction.message
+            .edit(generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser))
+            .catch(console.error);
     }
 
     try {

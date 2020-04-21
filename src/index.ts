@@ -1,10 +1,13 @@
+import { handleQueueJoin } from "./queue/joinQueue";
 import * as discord from "discord.js";
 
 const client = new discord.Client({ partials: ["MESSAGE", "CHANNEL", "REACTION"] });
 
 client.on("ready", () => {
     console.log("Discord OK");
-    client.user.setPresence({ activity: { name: 'faites : "navet!aled"' } });
+    client.user.setPresence({
+        activity: { name: 'faites : "navet!aled" ou "dokyu!aled"' },
+    });
 });
 client.login(process.env.DISCORD_BOT_TOKEN);
 
@@ -26,6 +29,7 @@ import { loadCommands } from "./loadCommands";
 const ncmds = loadCommands();
 
 import * as command from "./commands";
+import { isReplyError } from "./ReplyError";
 
 client.on("message", async (msg) => {
     if (msg.partial) {
@@ -39,19 +43,35 @@ client.on("message", async (msg) => {
     }
 
     let split = msg.content.split(" ");
-    if (!split.length || !split[0].startsWith("navet!")) return;
-    try {
-        split[0] = split[0].split("!")[1] || "";
-    } catch {
-        split[0] = "";
+    // if (!split.length || !split[0].startsWith("navet!")) return;
+    // try {
+    //     split[0] = split[0].split("!")[1] || "";
+    // } catch {
+    //     split[0] = "";
+    // }
+    let prefixSplit = split[0].split("!");
+    let prefix = prefixSplit[0];
+    split[0] = prefixSplit[1] || "";
+
+    if (!prefix || !prefix.length) {
+        return;
     }
+
     for (let cmd of ncmds) {
-        if (command.predicate(split, cmd)) {
+        if (command.predicate(prefix, split, cmd)) {
             let nbToShift = cmd.scope.length;
             while (nbToShift--) {
                 split.shift();
             }
-            cmd.handler(msg, split);
+            try {
+                await cmd.handler(msg, split);
+            } catch (err) {
+                if (isReplyError(err)) {
+                    err.discharge(msg);
+                } else {
+                    console.error(err);
+                }
+            }
             return;
         }
     }
@@ -66,9 +86,23 @@ client.on("messageReactionAdd", async (reaction, user) => {
             return;
         }
     }
-    console.log(reaction);
+    if (user.partial) {
+        try {
+            await user.fetch();
+        } catch {
+            return;
+        }
+    }
 
-    if (reaction.message.author.id == client.user.id) {
-        console.log("patate");
+    try {
+        if (reaction.message.author.id == client.user.id) {
+            await handleQueueJoin(reaction, user as discord.User);
+        }
+    } catch (err) {
+        if (isReplyError(err)) {
+            err.discharge(reaction.message);
+        } else {
+            console.error(err);
+        }
     }
 });

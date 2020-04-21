@@ -3,26 +3,32 @@ import * as discord from "discord.js";
 export interface CommandModule {
     name: string;
     commands: Command[];
+    prefix?: string;
 }
 
 export interface Command {
+    prefix?: string;
     scope: string[];
     argNb: number;
     stopOnArgMissmatch?: boolean;
-    handler: (msg: discord.Message | discord.PartialMessage, splitMsg: string[]) => void;
+    handler: (msg: discord.Message | discord.PartialMessage, splitMsg: string[]) => Promise<void>;
     helper?: Function;
 }
 
 /**
  * Indicates a match between a command and the message inputed.
  */
-export function predicate(split: string[], cmd: Command): boolean {
+export function predicate(prefix: string, split: string[], cmd: Command): boolean {
     if (split.length >= cmd.scope.length + cmd.argNb) {
-        let i = 0;
-        for (let toMatch of cmd.scope) {
-            if (toMatch != split[i++]) return false;
+        // console.log(cmd.prefix);
+        // console.log(prefix);
+        if ((!cmd.prefix && prefix == "navet") || cmd.prefix == prefix) {
+            let i = 0;
+            for (let toMatch of cmd.scope) {
+                if (toMatch != split[i++]) return false;
+            }
+            return true;
         }
-        return true;
     } else {
         return false;
     }

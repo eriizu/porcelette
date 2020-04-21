@@ -8,25 +8,16 @@ export async function handleQueuePublishing(
     msg: discord.Message | discord.PartialMessage,
     splitMsg: string[]
 ) {
-    if (!msg.guild && !msg.guild.id) {
+    if (!msg.guild || !msg.guild.id) {
         throw new ReplyError(
             "Vous ne pouvez pas publier une liste d'attente dans vos messages privées. Relancez cette même commande sur un serveur.",
             "Queue publishing forbidden in private messages"
         );
     }
-    let queuemsg = await msg.channel.send(generateMessage(msg.author.tag));
-    markedAsPublished(msg.author.id, queuemsg, msg.channel.id);
-}
-
-export async function markedAsPublished(
-    userId: string,
-    message: discord.Message,
-    channelId: string
-) {
     let queue: DbQueue;
 
     try {
-        queue = await Db.findOne({ creatorId: userId, state: State.unpublished });
+        queue = await Db.findOne({ "creator.id": msg.author.id, state: State.unpublished });
         assert(queue);
     } catch (err) {
         throw new ReplyError(
@@ -35,6 +26,15 @@ export async function markedAsPublished(
         );
     }
 
+    let queuemsg = await msg.channel.send(generateMessage(msg.author.tag));
+    await markedAsPublished(queue, queuemsg, msg.channel.id);
+}
+
+export async function markedAsPublished(
+    queue: DbQueue,
+    message: discord.Message,
+    channelId: string
+) {
     queue.state = State.running;
     queue.messageId = message.id;
     queue.channelId = channelId;

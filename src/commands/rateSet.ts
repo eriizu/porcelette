@@ -1,3 +1,4 @@
+import { ReplyError } from "./../ReplyError";
 import * as discord from "discord.js";
 import * as moment from "moment-timezone";
 import * as users from "../users";
@@ -16,16 +17,24 @@ async function setRate(
         assert(msg.guild);
         assert(msg.guild.id);
     } catch {
-        msg.channel.send(
-            "Il me semble que nous sommes en messages privés, or je différencie les cours du navet en fonction du serveur depuis lequel vous me parlez."
+        throw new ReplyError(
+            "Il me semble que nous sommes en messages privés, or je différencie les cours du navet en fonction du serveur depuis lequel vous me parlez.",
+            "Cannot set rate in DMs."
         );
-        return;
+        // msg.channel.send(
+        //     "Il me semble que nous sommes en messages privés, or je différencie les cours du navet en fonction du serveur depuis lequel vous me parlez."
+        // );
+        // return;
     }
 
     let price = parseInt(splitMsg[0]);
     if (isNaN(price) || price < 0) {
-        msg.channel.send("Le prix doit être un nombre entier strictement positif.");
-        return;
+        throw new ReplyError(
+            "Le prix doit être un nombre entier strictement positif.",
+            "Price NaN"
+        );
+        // msg.channel.send("Le prix doit être un nombre entier strictement positif.");
+        // return;
     }
 
     let now = moment().tz(user.timezone).toDate();
@@ -37,7 +46,7 @@ async function setRate(
     });
     if (delRes && delRes.deletedCount) {
         msg.channel.send(
-            `J'ai supprimé ${delRes.deletedCount} valeure(s) rapportées sur la même période afin de ne pas avoir de doublons.`
+            `🟠 J'ai supprimé ${delRes.deletedCount} valeure(s) rapportée(s) sur la même période afin de ne pas avoir de double déclaratifs.`
         );
     }
     try {
@@ -45,7 +54,7 @@ async function setRate(
 
         if (kind == rates.Kind.buying) {
             msg.channel.send(
-                "🟢 C'est noté ! L'achat initial de navet chez vous se fait à " +
+                "🟢 C'est noté ! L'achat initial de navet, chez vous, se fait à " +
                     splitMsg[0] +
                     " clo."
             );

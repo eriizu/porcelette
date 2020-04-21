@@ -19,5 +19,5 @@ export class ReplyError extends Error {
 }
 
 export function isReplyError(x: any): x is ReplyError {
-    return typeof x.replyWith == "string" && typeof x.discharge == "function";
+    return typeof x.replyWith == "string" && typeof x.discharge == "function" && !x.replyTo;
 }
