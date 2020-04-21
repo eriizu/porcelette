@@ -38,7 +38,7 @@ export async function handleBumpQueue(
         } catch (err) {
             console.error(err);
             channel.send(
-                `${queue.currentUser.tag}, envoyez-moi \`dokyu!get\` pour obtenir le dodocode !`
+                `<@${queue.currentUser.id}>, envoyez-moi \`dokyu!get\` pour obtenir le dodocode !`
             );
         }
         annoncement
