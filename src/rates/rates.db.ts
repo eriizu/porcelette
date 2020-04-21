@@ -31,7 +31,7 @@ export const SchemaRate = new mongoose.Schema({
     to: { type: Date, required: true },
 });
 
-SchemaRate.static("add", async function(
+SchemaRate.static("add", async function (
     this: mongoose.Model<DbRate>,
     user: users.DbUser,
     guildId: string,
@@ -50,8 +50,8 @@ SchemaRate.static("add", async function(
         if (kind == Kind.selling) {
             if (now.hours() < 12) {
                 from.startOf("day");
-                to.hours(11);
-                to.endOf("hour");
+                to.hours(12);
+                to.startOf("hour");
             } else {
                 from.hours(12);
                 from.startOf("hour");
@@ -79,7 +79,7 @@ SchemaRate.static("add", async function(
             to: to.toDate(),
         } as Rate);
     } catch (err) {
-        throw new Error(`Failed to create rate/price. Message from the drive:\n` + err.message);
+        throw new Error(`Failed to create rate/price. Message from the driver:\n` + err.message);
     }
 });
 

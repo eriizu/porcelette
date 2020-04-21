@@ -9,7 +9,9 @@ The first goal of this bot is for ppl to report:
 
 Knowing that, the bot can tell where the users shall sell their turnips and inform them on their expected earnings.
 
-# Planned Commands
+# Commands
+
+## Turnips
 
 All are subject to change.
 
@@ -31,3 +33,17 @@ All are subject to change.
     -   stops at five entries
 -   "navet!fullboard"
     -   same behavior, except it doesn't stop at five
+
+## Dokyu
+
+- "dokyu!create"
+  - in a channel: sends instrutions, in the channel and by PM
+  - in private: sends intructions.
+- "dokyu!create" + a dodo code (in PM)
+  - creates an instance in DB, marked as unpublished.
+- "dokyu!publish" (in a channel)
+  - marks the last queue made by the user as running, and post a message to watch the reactions.
+- "dokyu!done" (anywhere)
+  - marks the user as done with the dodocode and gives access to the next one
+- "dokyu!stop" (anywhere)
+  - marks the queue as terminated

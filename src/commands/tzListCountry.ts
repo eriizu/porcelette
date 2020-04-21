@@ -40,7 +40,7 @@ export async function tzListCountry(
 /**
  * Lists all timezones available with moment.js
  */
-function tzHelper(msg: discord.Message | discord.PartialMessage, splitMsg: string[]) {
+async function tzHelper(msg: discord.Message | discord.PartialMessage, splitMsg: string[]) {
     let builder: string[] = [
         "Re-run the same command with a search keyword.",
         " The easiest way to find your timezone is by giving me your ISO alpha-2 country code.",

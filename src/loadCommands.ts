@@ -14,7 +14,13 @@ export function loadCommands() {
             let cmdMod = importedModule.default;
             if (Command.isCommandModule(cmdMod)) {
                 console.log("Loading module: " + cmdMod.name + ".");
-                commands.push(...cmdMod.commands);
+                let prefix = cmdMod.prefix;
+                cmdMod.commands.forEach((cmd) => {
+                    cmd.prefix = prefix;
+                    if (cmd.prefix) console.log('\t- "' + cmd.prefix + "!" + cmd.scope + '"');
+                    else console.log('\t- "' + cmd.scope + '"');
+                    commands.push(cmd);
+                });
             }
         }
     }
