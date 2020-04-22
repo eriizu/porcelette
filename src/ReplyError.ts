@@ -10,7 +10,7 @@ export class ReplyError extends Error {
     }
 
     public discharge(msg: discord.Message | discord.PartialMessage) {
-        msg.channel.send(`🔴 ${this.replyWith}\n(code erreur : ${errorId})`).catch((err) => {
+        msg.channel.send(`🔴 ${this.replyWith}\n(ID d'erreur : ${errorId})`).catch((err) => {
             console.error("failed to reply to error");
             console.error(err);
         });
