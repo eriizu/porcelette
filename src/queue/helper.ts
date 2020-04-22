@@ -13,7 +13,7 @@ export async function handleHelper(
         `**Dokyu, BETA**`,
         ``,
         `Le but de dokyu (contraction de "dodo" et de "queue" en anglais) est de vous aider à organiser des files d'attentes pour accèder aux îles des uns et des autres.`,
-        `Pour créer une file d'attente : envoyez moi en MP \`dokyu!create\` suivi de votre dodo code.`,
+        `Pour **créer une file d'attente** : envoyez moi en **MP** \`dokyu!create\` **suivi de votre dodo code**.`,
         `Après quoi, il suffira de faire \`dokyu!publish\` dans le channel de votre choix, dans les règles du serveur sur lequel vous êtes.`,
         ``,
         `Pour accèder à l'île de quelqu'un, il suffit de mettre une réaction sur le message de file d'attente.`,

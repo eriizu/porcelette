@@ -9,17 +9,22 @@ export async function handleTerminate(
     msg: discord.Message | discord.PartialMessage,
     _splitMsg: string[]
 ) {
-    let queues: DbQueue[];
+    await terminate(msg.author.id, msg.client);
 
+    msg.channel.send("🟢 J'ai fermé la file d'attente !");
+}
+
+export async function terminate(authorid: string, client: discord.Client) {
+    let queues: DbQueue[];
     try {
         queues = await Db.find({
-            "creator.id": msg.author.id,
+            "creator.id": authorid,
             state: { $not: { $eq: State.finished } },
         });
         assert(queues.length != 0, "No queues to update");
         let res = await Db.updateMany(
             {
-                "creator.id": msg.author.id,
+                "creator.id": authorid,
                 state: { $not: { $eq: State.finished } },
             },
             {
@@ -37,7 +42,7 @@ export async function handleTerminate(
 
     queues.forEach(async (q) => {
         try {
-            let channel = (await msg.client.channels.fetch(q.channelId)) as discord.TextChannel;
+            let channel = (await client.channels.fetch(q.channelId)) as discord.TextChannel;
             let annoncement = await channel.messages.fetch(q.messageId);
 
             await annoncement.edit(
@@ -48,5 +53,5 @@ export async function handleTerminate(
         }
     });
 
-    msg.channel.send("🟢 J'ai fermé la file d'attente !");
+    return queues;
 }

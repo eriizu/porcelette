@@ -5,6 +5,7 @@ import { handleQueuePublishing } from "../queue/publishQueue";
 import { handleHelper } from "../queue/helper";
 import { handleTerminate } from "../queue/terminateQueue";
 import { handleGetCode } from "../queue/getCode";
+import { handleGetQueueLink } from "../queue/getQueueLink";
 
 let cmdModule: CommandModule = {
     name: "queue",
@@ -44,6 +45,12 @@ let cmdModule: CommandModule = {
             scope: ["aled"],
             argNb: 0,
             handler: handleHelper,
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: ["list"],
+            argNb: 0,
+            handler: handleGetQueueLink,
             stopOnArgMissmatch: false,
         },
         {

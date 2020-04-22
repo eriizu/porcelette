@@ -24,6 +24,7 @@ export interface Queue {
     state: State;
     messageId?: string;
     channelId?: string;
+    guildId?: string;
 }
 
 export interface DbQueue extends mongoose.Document, Queue {}
@@ -36,6 +37,7 @@ export const SchemaQueue = new mongoose.Schema({
     state: { type: Number, default: State.unpublished },
     messageId: { type: String },
     channelId: { type: String },
+    guildId: { type: String },
 });
 
 export const Db = mongoose.model<DbQueue>("queues", SchemaQueue);

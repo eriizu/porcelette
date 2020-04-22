@@ -1,6 +1,7 @@
 import { ReplyError } from "./../ReplyError";
-import { Db, Queue } from "./queue.db";
+import { Db, Queue, State } from "./queue.db";
 import * as discord from "discord.js";
+import { terminate } from "./terminateQueue";
 
 export async function handleQueueCreation(
     msg: discord.Message | discord.PartialMessage,
@@ -13,10 +14,16 @@ export async function handleQueueCreation(
         );
     }
     let dodocode = splitMsg[0];
-    let userId = msg.author.id;
+
+    try {
+        await terminate(msg.author.id, msg.client);
+    } catch (err) {
+        console.warn(err);
+    }
+
     await createQueue(msg.author.id, msg.author.tag, dodocode);
     msg.channel.send(
-        "J'ai créé la liste d'attente en base de données. Maintenant faites `dokyu!publish` dans le canal où vous souhaitez la publier."
+        "J'ai créé la liste d'attente en base de données. Maintenant faites `dokyu!publish` dans le canal où vous souhaitez la publier.\n\nSi vous étiez à l'origine d'une autre file d'attente, j'ai pris la liberté de la clore."
     );
 }
 

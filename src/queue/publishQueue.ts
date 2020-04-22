@@ -38,6 +38,7 @@ export async function markedAsPublished(
     queue.state = State.running;
     queue.messageId = message.id;
     queue.channelId = channelId;
+    queue.guildId = message.guild.id;
     try {
         await queue.save();
     } catch (err) {
