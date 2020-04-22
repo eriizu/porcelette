@@ -25,7 +25,7 @@ export async function handleLeaveQueue(
     }
     let channel = (await msg.client.channels.fetch(queue.channelId)) as discord.TextChannel;
     let annoncement = await channel.messages.fetch(queue.messageId);
-    Promise.all([
+    await Promise.all([
         annoncement.edit(generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser)),
         msg.channel.send(
             `🟢 ${msg.author.username}, je vous ai retiré de la liste d'attente de ${queue.creator.tag}.`
