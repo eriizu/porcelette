@@ -23,7 +23,7 @@ export async function handleQueueCreation(
 
     await createQueue(msg.author.id, msg.author.tag, dodocode);
     msg.channel.send(
-        "J'ai créé la liste d'attente en base de données. Maintenant faites `dokyu!publish` dans le canal où vous souhaitez la publier.\n\n**Merci de faire attention au channel où vous publiez votre liste d'attente, priviligiez les channels dédiés au liste d'attentes ou aux navets.\n\nSi vous étiez à l'origine d'une autre file d'attente, j'ai pris la liberté de la clore."
+        "J'ai créé la liste d'attente en base de données. Maintenant faites `dokyu!publish` dans le canal où vous souhaitez la publier.\n\n**Merci de faire attention au channel où vous publiez votre liste d'attente, priviligiez les channels dédiés au liste d'attentes ou aux navets.**\n\nSi vous étiez à l'origine d'une autre file d'attente, j'ai pris la liberté de la clore."
     );
 }
 

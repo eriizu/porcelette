@@ -6,6 +6,7 @@ import { handleHelper } from "../queue/helper";
 import { handleTerminate } from "../queue/terminateQueue";
 import { handleGetCode } from "../queue/getCode";
 import { handleGetQueueLink } from "../queue/getQueueLink";
+import { handleLeaveQueue } from "../queue/leaveQueue";
 
 let cmdModule: CommandModule = {
     name: "queue",
@@ -51,6 +52,12 @@ let cmdModule: CommandModule = {
             scope: ["list"],
             argNb: 0,
             handler: handleGetQueueLink,
+            stopOnArgMissmatch: false,
+        },
+        {
+            scope: ["leave"],
+            argNb: 0,
+            handler: handleLeaveQueue,
             stopOnArgMissmatch: false,
         },
         {
