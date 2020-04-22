@@ -5,7 +5,7 @@ import * as discord from "discord.js";
 import * as assert from "assert";
 import { generateMessage } from "./generate";
 
-export async function handleHelper(
+export async function handleAbout(
     msg: discord.Message | discord.PartialMessage,
     _splitMsg: string[]
 ) {
@@ -26,6 +26,33 @@ export async function handleHelper(
         `Vous pouvez aussi contacter ma maman, Élise#9457.`,
         ``,
         `Amusez-vous bien avec Dokyu !`,
+    ];
+
+    msg.channel.send(builder.join("\n"));
+}
+export async function handleHelper(
+    msg: discord.Message | discord.PartialMessage,
+    _splitMsg: string[]
+) {
+    let builder: string[] = [
+        `**Dokyu, commandes**`,
+        ``,
+        `Création d'une nouvelle file d'attente :`,
+        `1. **en MP avec moi** : \`dokyu!create\` suivi d'un espace et de votre dodo code. Exemple : \`dokyu!create 123A5\``,
+        `2. **dans un channel du serveur** : \`dokyu!publish\``,
+        `-. C'est bon ! Les gens peuvent s'incrire sur votre liste d'attente et obtenir votre dodocode.`,
+        ``,
+        `Fermer une file :`,
+        `-. **n'importe où** : \`dokyu!close\``,
+        ``,
+        `Lister les files ouvertes :`,
+        `-. \`dokyu!list\``,
+        ``,
+        `Rejoindre une file :`,
+        `- Ajouter n'importe quelle réaction sur le message d'annonce de la file d'attente. Il s'agit du message sur lesquel on apperçoit la liste des personnes qui attendent.`,
+        ``,
+        `Quitter une file :`,
+        `- Ça n'est pas encore faisable.`,
     ];
 
     msg.channel.send(builder.join("\n"));

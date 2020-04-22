@@ -18,6 +18,10 @@ export async function handleGetQueueLink(
             err
         );
     }
+    if (!queues || !queues.length) {
+        msg.channel.send("Je n'ai pas trouvé de listes d'attente actives.");
+    }
+
     let builder: string[] = ["Les listes d'attentes actuellement actives sont les suivantes :"];
     queues.forEach((qu) => {
         builder.push(
