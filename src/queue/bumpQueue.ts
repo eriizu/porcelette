@@ -41,23 +41,23 @@ export async function handleBumpQueue(
                 `<@${queue.currentUser.id}>, envoyez-moi \`dokyu!get\` pour obtenir le dodocode !`
             );
         }
-        annoncement
-            .edit(generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser))
-            .catch(console.error);
     } else {
         queue.currentUser.id = undefined;
         queue.currentUser.tag = undefined;
         await saveBumpedQueue(queue);
-        await annoncement.edit(
-            generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser)
-        );
+        // await annoncement.edit(
+        //     generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser)
+        // );
 
         // TODO is there something to do when the queue is empty?
     }
+    annoncement
+        .edit(generateMessage(queue.creator.tag, queue.nextUsers, queue.currentUser))
+        .catch(console.error);
     msg.channel.send("C'est bon, j'ai marqué votre tour comme terminé !");
 }
 
-async function saveBumpedQueue(queue: DbQueue) {
+export async function saveBumpedQueue(queue: DbQueue) {
     try {
         await queue.save();
     } catch (err) {

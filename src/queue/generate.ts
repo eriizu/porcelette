@@ -36,7 +36,9 @@ export function generateMessage(
     }
     builder.push("");
     builder.push("Pour faire la queue, réagissez sur ce message, avec n'importe quel emote.");
-    builder.push("⚠️ Retirer un emote ne vous désincrit pas de la liste, pour le moment.");
+    builder.push("");
+    builder.push("⚠️ Retirer un emote ne vous désincrit pas de la liste pour le moment.");
+    builder.push("Pour quitter la file, faites `dokyu!leave`.");
     // builder.push("");
     // builder.push("Si vos messages privés sont fermés, envoyez m'en un avec n'importe quoi");
     // "Pour faire la queue, réagissez sur ce message, avec n'importe quel emote. Il n'est nécessaire de réagir qu'une seule fois. Toute suppression d'une réaction sur ce message, entrainera votre déscintription de la liste ; sans que regard soit porté aux autres éventuelles réactions en votre nom qui seraient toujours présentes.";
