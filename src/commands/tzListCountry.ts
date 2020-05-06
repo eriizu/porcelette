@@ -16,7 +16,7 @@ export async function tzListCountry(
         );
     } catch {
         try {
-            let builder: string[] = ["Voici les résulats de votre recherche de fuseau horraire :"];
+            let builder: string[] = ["Voici les résulats de votre recherche de fuseau horaire :"];
             moment.tz.names().forEach((element) => {
                 if (element.toLowerCase().includes(splitMsg[0].toLowerCase()))
                     builder.push(element);
